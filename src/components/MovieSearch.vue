@@ -7,7 +7,7 @@
             <div v-for="movie in movies" :key="movie.id">
                 <h2>{{ movie.title }}</h2>
                 <p>Titolo Originale: {{ movie.original_title }}</p>
-                <p>Lingua: {{ movie.original_language }}</p>
+                <p>Lingua: {{ getLanguageFlag(movie.original_language) }} {{ movie.original_language }}</p>
                 <p>Voto: {{ movie.vote_average }}</p>
             </div>
         </div>
@@ -28,7 +28,7 @@ const searchMovies = async () => {
     if (!searchQuery.value) return;
     isLoading.value = true;
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=f7bf2a5808b06a8304a08eb2f47da799&query=${searchQuery.value}`);
+        const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchQuery.value}`);
         const data = await response.json();
         movies.value = data.results;
     } catch (error) {
@@ -36,5 +36,14 @@ const searchMovies = async () => {
     } finally {
         isLoading.value = false;
     }
+};
+
+const getLanguageFlag = (language) => {
+    const flagMap = {
+        'en': '🇬🇧',
+        'it': '🇮🇹',
+
+    };
+    return flagMap[language.toLowerCase()] || '🏳️';
 };
 </script>
