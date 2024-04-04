@@ -5,6 +5,7 @@
 
         <div v-if="media.length > 0">
             <div v-for="item in media" :key="item.id">
+                <img :src="getPosterUrl(item.poster_path)" :alt="item.title || item.name" v-if="item.poster_path">
                 <h2>{{ item.title || item.name }}</h2>
                 <p v-if="item.title">Titolo Originale: {{ item.original_title }}</p>
                 <p v-else>Titolo Originale: {{ item.original_name }}</p>
@@ -42,6 +43,11 @@ const searchMedia = async () => {
     } finally {
         isLoading.value = false;
     }
+};
+
+const getPosterUrl = (path) => {
+    if (!path) return '';
+    return `https://image.tmdb.org/t/p/w500${path}`;
 };
 
 const getLanguageFlag = (language) => {
