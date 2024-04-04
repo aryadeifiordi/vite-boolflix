@@ -1,17 +1,19 @@
 <template>
     <div>
-        <input type="text" v-model="searchQuery" placeholder="Cerca film...">
-        <button @click="searchMovies">Cerca</button>
+        <input type="text" v-model="searchQuery" placeholder="Cerca film o serie TV...">
+        <button @click="searchMedia">Cerca</button>
 
-        <div v-if="movies.length > 0">
-            <div v-for="movie in movies" :key="movie.id">
-                <h2>{{ movie.title }}</h2>
-                <p>Titolo Originale: {{ movie.original_title }}</p>
-                <p>Lingua: {{ getLanguageFlag(movie.original_language) }} {{ movie.original_language }}</p>
-                <p>Voto: {{ movie.vote_average }}</p>
+        <div v-if="media.length > 0">
+            <div v-for="item in media" :key="item.id">
+                <h2>{{ item.title || item.name }}</h2>
+                <p v-if="item.title">Titolo Originale: {{ item.original_title }}</p>
+                <p v-else>Titolo Originale: {{ item.original_name }}</p>
+                <p>Lingua: {{ getLanguageFlag(item.original_language) }} {{ item.original_language }}</p>
+                <p>Voto: {{ item.vote_average }}</p>
+                <hr>
             </div>
         </div>
-        <div v-else-if="searchQuery && !isLoading">Nessun film trovato.</div>
+        <div v-else-if="searchQuery && !isLoading">Nessun film o serie TV trovato.</div>
         <div v-if="isLoading">Caricamento...</div>
     </div>
 </template>
@@ -21,18 +23,22 @@ import { ref } from 'vue';
 
 const apiKey = 'f7bf2a5808b06a8304a08eb2f47da799';
 const searchQuery = ref('');
-const movies = ref([]);
+const media = ref([]);
 const isLoading = ref(false);
 
-const searchMovies = async () => {
+const searchMedia = async () => {
     if (!searchQuery.value) return;
     isLoading.value = true;
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchQuery.value}`);
-        const data = await response.json();
-        movies.value = data.results;
+        const movieResponse = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchQuery.value}`);
+        const movieData = await movieResponse.json();
+
+        const tvResponse = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&query=${searchQuery.value}`);
+        const tvData = await tvResponse.json();
+
+        media.value = [...movieData.results, ...tvData.results];
     } catch (error) {
-        console.error('Errore durante la ricerca dei film:', error);
+        console.error('Errore durante la ricerca dei media:', error);
     } finally {
         isLoading.value = false;
     }
