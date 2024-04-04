@@ -10,7 +10,7 @@
                 <p v-if="item.title">Titolo Originale: {{ item.original_title }}</p>
                 <p v-else>Titolo Originale: {{ item.original_name }}</p>
                 <p>Lingua: {{ getLanguageFlag(item.original_language) }} {{ item.original_language }}</p>
-                <p>Voto: {{ item.vote_average }}</p>
+                <p>Voto: {{ getRatingStars(item.vote_average) }}</p>
                 <hr>
             </div>
         </div>
@@ -58,4 +58,11 @@ const getLanguageFlag = (language) => {
     };
     return flagMap[language.toLowerCase()] || '🏳️';
 };
+
+const getRatingStars = (rating) => {
+    const numStars = Math.ceil(rating / 2);
+    return '⭐️'.repeat(numStars);
+};
 </script>
+
+<style scoped></style>
