@@ -86,6 +86,8 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
+    background-color: black;
+    /* Aggiunto colore nero al background dell'header */
 }
 
 .logo {
@@ -100,7 +102,8 @@ input {
 
 button {
     padding: 0.5rem 1rem;
-    background-color: #007bff;
+    background-color: red;
+    /* Aggiunto colore rosso al pulsante Cerca */
     color: #fff;
     border: none;
     border-radius: 5px;
